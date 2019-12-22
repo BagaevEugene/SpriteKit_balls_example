@@ -16,7 +16,19 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         
-        // Get label node from scene and store it for use later
+        
+        backgroundColor = UIColor.white
+        
+        scene!.physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
+        
+        run(SKAction.repeat(SKAction.sequence([SKAction.run(createBall), SKAction.wait(forDuration: 0.15)]), count: 200))
+        
+        
+        
+        
+        
+        
+        /* Get label node from scene and store it for use later
         self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
         if let label = self.label {
             label.alpha = 0.0
@@ -35,9 +47,22 @@ class GameScene: SKScene {
                                               SKAction.fadeOut(withDuration: 0.5),
                                               SKAction.removeFromParent()]))
         }
+    
+         */
     }
     
+    func createBall() {
+        
+        let ball = SKSpriteNode(imageNamed: "snowflake")
+        
+        ball.position = CGPoint(x: CGFloat(Int(arc4random())  & Int(size.width)), y: size.height - ball.size.height)
+        
+        ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width/2)
+        addChild(ball)
+        
+    }
     
+/*
     func touchDown(atPoint pos : CGPoint) {
         if let n = self.spinnyNode?.copy() as! SKShapeNode? {
             n.position = pos
@@ -86,4 +111,6 @@ class GameScene: SKScene {
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
     }
+*/
+
 }
