@@ -14,6 +14,67 @@ class GameScene: SKScene {
     private var label : SKLabelNode?
     private var spinnyNode : SKShapeNode?
     
+  
+    func createBall() {
+     
+        
+        let src = [
+             
+                 vector_float2(0.0, 0.0),
+                 vector_float2(0.5, 0.0),
+                 vector_float2(1.0, 0.0),
+                 
+                 vector_float2(0.0, 0.5),
+                 vector_float2(0.5, 0.5),
+                 vector_float2(1.0, 0.5),
+                 
+                 vector_float2(0.0, 1.0),
+                 vector_float2(0.5, 1.0),
+                 vector_float2(1.0, 1.0),
+             ]
+             
+          let warpGeometryGridNoWarp = SKWarpGeometryGrid(columns: 2, rows: 2, sourcePositions: src, destinationPositions: src)
+             
+          var dst = src
+          
+        
+          let delta = Float.random(in: 0...1)
+        
+          dst[0] = vector_float2(0,-0.5)
+          dst[2] = vector_float2(delta,-0.5)
+             
+          let warpGeometryGrid = SKWarpGeometryGrid(columns: 2, rows: 2, sourcePositions: src, destinationPositions: dst)
+            
+        
+        
+          let ball = SKSpriteNode(imageNamed: "snowflake")
+          
+          ball.position = CGPoint(x: CGFloat(Int(arc4random())  & Int(size.width)), y: size.height - ball.size.height)
+          
+          ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width/2)
+          
+        if Bool.random() {
+        
+          ball.warpGeometry = warpGeometryGridNoWarp
+        
+           let warpAction = SKAction.animate(withWarps:
+            [
+            warpGeometryGridNoWarp,
+            warpGeometryGrid
+            ],
+            times: [0.2, 0.5])
+        
+          ball.run(warpAction!)
+        }
+        
+          addChild(ball)
+    
+    }
+    
+    
+    
+    
+    
     override func didMove(to view: SKView) {
         
         
@@ -21,11 +82,28 @@ class GameScene: SKScene {
         
         scene!.physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
         
-        run(SKAction.repeat(SKAction.sequence([SKAction.run(createBall), SKAction.wait(forDuration: 0.15)]), count: 200))
         
+        run(
+            
+            SKAction.repeat(
+                
+                    SKAction.sequence(
+                       [
+                          SKAction.run(createBall),
+                                               
+                          SKAction.wait(forDuration: 0.15),
+                    
+                        ]
+                
+                     )
+                    ,
+                    count: 200
+                                    
+            )
+        )
         
-        
-        
+      }
+       
         
         
         /* Get label node from scene and store it for use later
@@ -34,7 +112,7 @@ class GameScene: SKScene {
             label.alpha = 0.0
             label.run(SKAction.fadeIn(withDuration: 2.0))
         }
-        
+       
         // Create shape node to use during mouse interaction
         let w = (self.size.width + self.size.height) * 0.05
         self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
@@ -48,21 +126,12 @@ class GameScene: SKScene {
                                               SKAction.removeFromParent()]))
         }
     
-         */
+         
     }
     
-    func createBall() {
-        
-        let ball = SKSpriteNode(imageNamed: "snowflake")
-        
-        ball.position = CGPoint(x: CGFloat(Int(arc4random())  & Int(size.width)), y: size.height - ball.size.height)
-        
-        ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width/2)
-        addChild(ball)
-        
-    }
+  
     
-/*
+
     func touchDown(atPoint pos : CGPoint) {
         if let n = self.spinnyNode?.copy() as! SKShapeNode? {
             n.position = pos
@@ -113,4 +182,4 @@ class GameScene: SKScene {
     }
 */
 
-}
+ }
